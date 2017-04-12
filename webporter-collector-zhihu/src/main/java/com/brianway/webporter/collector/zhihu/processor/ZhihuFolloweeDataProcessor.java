@@ -1,5 +1,7 @@
 package com.brianway.webporter.collector.zhihu.processor;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.brianway.webporter.collector.zhihu.SegmentReader;
 import com.brianway.webporter.data.DataProcessor;
 import com.brianway.webporter.data.HashSetDuplicateRemover;
@@ -7,7 +9,6 @@ import com.brianway.webporter.data.elasticsearch.Document;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import us.codecraft.webmagic.selector.Json;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -28,16 +29,19 @@ public class ZhihuFolloweeDataProcessor implements DataProcessor<File, Document>
 
         if (!StringUtils.isEmpty(s)) {
             documents = new ArrayList<>(20);
-            Json json = new Json(s);
-            List<String> users = json.jsonPath("$.data[*].[*]").all();
-            List<String> ids = json.jsonPath("$.data[*].id").all();
-            int i = 0;
-            for (String id : ids) {
-                if (!duplicateRemover.isDuplicate(id)) {
-                    documents.add(new Document(id, users.get(i)));
-                }
-                i++;
-            }
+//            Json json = new Json(s);
+//            List<String> users = json.jsonPath("$.data[*].[*]").all();
+//            List<String> ids = json.jsonPath("$.data[*].id").all();
+//            int i = 0;
+//            for (String id : ids) {
+//                if (!duplicateRemover.isDuplicate(id)) {
+//                    documents.add(new Document(id, users.get(i)));
+//                }
+//                i++;
+//            }
+            JSONObject jsonObject = JSON.parseObject(s);
+            String id = (String) jsonObject.get("id");
+            documents.add(new Document(id, s));
         }
         return documents;
     }

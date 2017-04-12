@@ -23,7 +23,7 @@ public class SegmentReader {
                     new FileReader(inItem)
             );
             String s;
-            in.readLine();//pass first line
+//            in.readLine();//pass first line
             s = in.readLine();
             if (!StringUtils.isEmpty(s)) {
                 s = s.substring(s.indexOf("{"));
